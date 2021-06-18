@@ -1,0 +1,21 @@
+<p></p>
+
+<p></p>
+<h3>Мои заказы</h3>
+<span ng-show="myOrders.length == 0">Вы пока не сделали ни одного заказа</span>
+<table class="table" ng-show="myOrders.length > 0">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Описание</th>
+        <th scope="col">Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="order in myOrders">
+        <td>{{order.id}}</td>
+        <td>{{order.description}}</td>
+        <td>{{order.price}}</td>
+    </tr>
+    </tbody>
+</table>

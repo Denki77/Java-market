@@ -1,0 +1,84 @@
+<p></p>
+<h3>Фильтр</h3>
+<form novalidate ng-submit="loadPage()">
+    <div class="form-group row">
+        <div class="form-group col-md-3">
+            <label for="filterTitle">Название товара</label>
+            <input class="form-control" type="text" ng-model="filter.title" id="filterTitle">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="filterMinPrice">Минимальная цена</label>
+            <input class="form-control" type="number" ng-model="filter.min_price" id="filterMinPrice">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="filterMaxPrice">Максимальная цена</label>
+            <input class="form-control" type="number" ng-model="filter.max_price" id="filterMaxPrice">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="filterSubmit">Фильтр</label>
+            <button class="form-control btn btn-primary" id="filterSubmit" type="submit">Применить</button>
+        </div>
+    </div>
+</form>
+
+<p></p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Название</th>
+        <th scope="col">Категория</th>
+        <th scope="col">Цена</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="p in productsPage.content">
+        <td>{{p.id}}</td>
+        <td>{{p.title}}</td>
+        <td>{{p.categoryTitle}}</td>
+        <td>{{p.price}}</td>
+        <td>
+            <button class="btn btn-outline-primary" ng-click="addToCart(p.id)">В корзину</button>
+            <button class="btn btn-outline-primary" ng-click="showProductInfo(p.id)">Посмотреть</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation" ng-show="productsPage.totalPages > 1">
+    <ul class="pagination">
+        <li ng-class="productsPage.first ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" ng-click="loadPage(1)">В начало</a>
+        </li>
+
+        <li ng-class="productsPage.first ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" ng-click="loadPage(productsPage.number)">Пред.</a>
+        </li>
+
+        <li ng-class="productsPage.number == pageIndex - 1 ? 'page-item active' : 'page-item'"
+            ng-repeat="pageIndex in paginationArray">
+            <a class="page-link" ng-click="loadPage(pageIndex)">{{pageIndex}}</a>
+        </li>
+
+        <li ng-class="productsPage.last ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" ng-click="loadPage(productsPage.number + 2)">След.</a>
+        </li>
+    </ul>
+</nav>
+
+<!--    <p></p>-->
+<!--    <h4>Add new product</h4>-->
+<!--    <div>-->
+<!--        <form novalidate ng-submit="createNewProduct()">-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputTitle" class="form-label">Title</label>-->
+<!--                <input type="text" class="form-control" ng-model="newProduct.title" id="inputTitle" aria-describedby="titleHelp">-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--                <label for="inputPrice" class="form-label">Price</label>-->
+<!--                <input type="number" class="form-control" ng-model="newProduct.price" id="inputPrice" aria-describedby="priceHelp">-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </form>-->
+<!--    </div>-->
