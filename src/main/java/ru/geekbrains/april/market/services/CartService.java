@@ -59,4 +59,8 @@ public class CartService {
         save(userCartId, userCart);
         save(guestCartId, guestCart);
     }
+
+    public void dropCart(String cartId) {
+        redisTemplate.delete(cartId);
+    }
 }
