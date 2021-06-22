@@ -29,7 +29,6 @@ public class AprilMarketApplication {
      */
 
     // todo Добавить на фронт обработку фронта на каждой странице
-    // todo isUserLoggedIn -> global scope
     // todo в индекс.хтмл добавить товаров в корзине(10)
 
     public static void main(String[] args) {

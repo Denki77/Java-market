@@ -34,6 +34,12 @@ public class Order {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;

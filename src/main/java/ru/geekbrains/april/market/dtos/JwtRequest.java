@@ -8,6 +8,7 @@ import java.util.UUID;
 public class JwtRequest {
     private String username;
     private String password;
+    private String token;
 }
 
 // {

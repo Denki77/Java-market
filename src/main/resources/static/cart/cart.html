@@ -28,8 +28,23 @@
 <span ng-show="cartDto.items.length == 0">Ваша корзина пуста</span>
 <button ng-click="clearCart()" class="btn btn-primary" ng-show="cartDto.items.length > 0">Очистить корзину</button>
 
-<div ng-show="isUserLoggedIn() && cartDto.items.length > 0">
+<div ng-show="isUserLoggedIn && cartDto.items.length > 0">
     <p></p>
     <h4>Оформление заказа</h4>
-    <button ng-click="createOrder()" class="btn btn-primary">Оформить заказ</button>
+    <form novalidate ng-submit="createOrder()" ng-show="cartDto.items.length > 0">
+        <div class="mb-3">
+            <label for="inputTel" class="form-label">Телефон</label>
+            <input type="text" class="form-control" ng-model="newOrder.phone" id="inputTel">
+        </div>
+        <div class="mb-8">
+            <label for="inputAddress" class="form-label">Адрес доставки</label>
+            <input type="text" class="form-control" ng-model="newOrder.address" id="inputAddress">
+        </div>
+        <p></p>
+        <button type="submit" class="btn btn-primary">Оформить заказ</button>
+    </form>
+</div>
+<div ng-hide="isUserLoggedIn">
+    <p></p>
+    <p>Для оформления заказа войдите или зарегистрируйтесь</p>
 </div>

@@ -1,13 +1,13 @@
 angular.module('app').controller('productsController', function ($scope, $http, $localStorage, $location) {
     const contextPath = 'http://localhost:8189/market';
 
-    $scope.isUserLoggedIn = function () {
+    /*$scope.isUserLoggedIn = function () {
         if ($localStorage.aprilMarketCurrentUser) {
             return true;
         } else {
             return false;
         }
-    };
+    };*/
 
     $scope.loadPage = function (page) {
         $http({

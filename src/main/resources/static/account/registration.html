@@ -1,0 +1,31 @@
+<p></p>
+<h3>Зарегистрироваться</h3>
+<form novalidate ng-submit="createUser()" name="create_user_form">
+    <div id="message_errors" class="mb-12 text-danger"></div>
+    <div class="mb-12">
+        <label for="inputName" class="form-label">Имя</label>
+        <input type="text" class="form-control" ng-model="newUser.name" id="inputName">
+    </div>
+    <div class="mb-12">
+        <label for="inputSurname" class="form-label">Фамилия</label>
+        <input type="text" class="form-control" ng-model="newUser.surname" id="inputSurname">
+    </div>
+    <div class="mb-12">
+        <label for="inputUsername" class="form-label">Логин*</label>
+        <input type="text" class="form-control" ng-model="newUser.username" id="inputUsername" required>
+    </div>
+    <div class="mb-12">
+        <label for="inputPassword" class="form-label">Пароль*</label>
+        <input type="password" class="form-control" ng-model="newUser.password" id="inputPassword" required>
+    </div>
+    <div class="mb-12">
+        <label for="inputConfirmPassword" class="form-label">Повторить пароль*</label>
+        <input type="password" class="form-control" ng-model="newUser.confirmpassword" id="inputConfirmPassword" required>
+    </div>
+    <div class="mb-12">
+        <label for="inputEmail" class="form-label">Мэйл*</label>
+        <input type="email" class="form-control" ng-model="newUser.email" id="inputEmail" required>
+    </div>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+</form>

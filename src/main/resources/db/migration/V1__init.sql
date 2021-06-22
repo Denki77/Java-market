@@ -1,5 +1,7 @@
 create table users (
     id                      bigserial primary key,
+    name                    varchar(50) not null unique,
+    surname                 varchar(50) not null unique,
     username                varchar(30) not null unique,
     password                varchar(80) not null,
     email                   varchar(80) unique,
@@ -25,10 +27,10 @@ values
 ('ROLE_USER'),
 ('ROLE_ADMIN');
 
-insert into users (username, password, email)
+insert into users (name, surname, username, password, email)
 values
-('user', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'bob_johnson@gmail.com'),
-('admin', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'john_johnson@gmail.com');
+('Userik', 'Ivanov', 'user', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'bob_johnson@gmail.com'),
+('Admin', 'Mainofff', 'admin', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'john_johnson@gmail.com');
 
 insert into users_roles (user_id, role_id)
 values
@@ -76,6 +78,8 @@ create table orders (
     id                              bigserial primary key,
     user_id                         bigint references users (id),
     price                           numeric (8, 2),
+    address                         varchar(255),
+    phone                           varchar(32),
     created_at                      timestamp default current_timestamp,
     updated_at                      timestamp default current_timestamp
 );

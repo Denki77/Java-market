@@ -23,23 +23,28 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
         }).then(function (response) {
             $scope.loadCart();
         });
-    };
 
-    $scope.isUserLoggedIn = function () {
-        if ($localStorage.aprilMarketCurrentUser) {
-            return true;
-        } else {
-            return false;
-        }
     };
 
     $scope.createOrder = function () {
-        $http({
-            url: contextPath + '/api/v1/orders',
-            method: 'POST'
-        }).then(function (response) {
-            $scope.loadCart();
-        });
+        var inputTel = $('#inputTel').val(),
+            inputAddress = $('#inputAddress').val();
+        if (inputTel.length === 0 || inputAddress.length === 0) {
+            alert("Заполните адрес доставки и номер телефона");
+            return false;
+        } else {
+            var dataArray = {};
+            dataArray['phone'] = inputTel;
+            dataArray['address'] = inputAddress;
+            $http({
+                url: contextPath + '/api/v1/orders',
+                data: dataArray,
+                method: 'POST'
+            }).then(function (response) {
+                $scope.loadCart();
+            });
+
+        }
     };
 
     $scope.decrementProduct = function (productId) {
