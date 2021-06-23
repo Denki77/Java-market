@@ -21,7 +21,6 @@ angular.module('app').controller('productsController', function ($scope, $http, 
             }
         }).then(function (response) {
             $scope.productsPage = response.data;
-            console.log($scope.productsPage);
 
             let minPageIndex = page - 2;
             if (minPageIndex < 1) {
@@ -36,18 +35,6 @@ angular.module('app').controller('productsController', function ($scope, $http, 
             $scope.paginationArray = $scope.generatePagesIndexes(minPageIndex, maxPageIndex);
         });
     };
-
-    $scope.addToCart = function (productId) {
-        $http({
-            url: contextPath + '/api/v1/cart/add/',
-            method: 'GET',
-            params: {
-                prodId: productId,
-                cartName: $localStorage.aprilCartId
-            }
-        }).then(function (response) {
-        });
-    }
 
     $scope.showProductInfo = function (productId) {
         $location.path('/product_info/' + productId);

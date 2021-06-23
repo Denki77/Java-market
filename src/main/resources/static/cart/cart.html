@@ -14,7 +14,7 @@
         <td>
             <button class="btn btn-primary" ng-click="decrementProduct(oi.productId)">-</button>
             {{oi.quantity}}
-            <button class="btn btn-primary" ng-click="addToCart(oi.productId)">+</button>
+            <button class="btn btn-primary" ng-click="addToCartProduct(oi.productId)">+</button>
         </td>
         <td>{{oi.pricePerProduct + ' x ' + oi.quantity + ' = ' + oi.price}}</td>
     </tr>

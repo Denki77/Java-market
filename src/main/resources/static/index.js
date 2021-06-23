@@ -45,6 +45,15 @@
 
         const contextPath = 'http://localhost:8189/market';
 
+        $rootScope.clearUser = function (needReload = true) {
+            delete $localStorage.aprilMarketCurrentUser;
+            $rootScope.isUserLoggedIn = false;
+            $http.defaults.headers.common.Authorization = '';
+            if (needReload) {
+                location.reload();
+            }
+        };
+
         if ($localStorage.aprilMarketCurrentUser) {
             // проверим не протух ли токен
             $http.post(contextPath + '/auth/check_auth', $localStorage.aprilMarketCurrentUser)
@@ -53,19 +62,14 @@
                         $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                         $rootScope.isUserLoggedIn = true;
                     } else {
-                        delete $localStorage.aprilMarketCurrentUser;
-                        $rootScope.isUserLoggedIn = false;
-                        $http.defaults.headers.common.Authorization = '';
+                        $rootScope.clearUser();
                     }
                 }, function errorCallback(response) {
-                    delete $localStorage.aprilMarketCurrentUser;
-                    $rootScope.isUserLoggedIn = false;
-                    $http.defaults.headers.common.Authorization = '';
+                    $rootScope.clearUser();
                 });
 
         } else {
-            $rootScope.isUserLoggedIn = false;
-            $http.defaults.headers.common.Authorization = '';
+            $rootScope.clearUser(false);
         }
 
         if (!$localStorage.aprilCartId) {
@@ -78,37 +82,23 @@
             });
         }
 
-        $rootScope.mergeCarts = function () {
-            console.log('ready');
-            $http({
-                url: contextPath + '/api/v1/cart/merge',
-                method: 'GET',
-                params: {
-                    'cartId': $localStorage.aprilCartId
-                }
-            }).then(function (response) {
-                console.log('ready');
-                location.reload();
-
-            });
-        }
-
-        $rootScope.tryToAuth = function () {
-            $http.post(contextPath + '/auth', $rootScope.user)
+        $rootScope.tryToAuth = function (user = null) {
+            if (user === null) {
+                return;
+            }
+            $http.post(contextPath + '/auth', user)
                 .then(function successCallback(response) {
                     if (response.data.token) {
                         $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
-                        $localStorage.aprilMarketCurrentUser = {username: $rootScope.user.username, token: response.data.token};
+                        $localStorage.aprilMarketCurrentUser = {username: user.username, token: response.data.token};
 
                         $rootScope.mergeCarts();
 
-                        $rootScope.user.username = null;
-                        $rootScope.user.password = null;
+                        user.username = null;
+                        user.password = null;
                     }
                 }, function errorCallback(response) {
-                    delete $localStorage.aprilMarketCurrentUser;
-                    $rootScope.isUserLoggedIn = false;
-                    $http.defaults.headers.common.Authorization = '';
+                    $rootScope.clearUser();
                 });
         };
 
@@ -117,25 +107,64 @@
             $location.path('/');
         };
 
-        $rootScope.clearUser = function () {
-            delete $localStorage.aprilMarketCurrentUser;
-            $rootScope.isUserLoggedIn = false;
-            $http.defaults.headers.common.Authorization = '';
-            location.reload();
+        $rootScope.loadCart = function (page) {
+            $http({
+                url: contextPath + '/api/v1/cart',
+                method: 'GET',
+                params: {
+                    cartName: $localStorage.aprilCartId
+                }
+            }).then(function (response) {
+                $rootScope.cartDto = response.data;
+                $rootScope.updateCountProductToTop(response.data.countProductInCart);
+            });
         };
 
+        $rootScope.mergeCarts = function () {
+            $http({
+                url: contextPath + '/api/v1/cart/merge',
+                method: 'GET',
+                params: {
+                    'cartId': $localStorage.aprilCartId
+                }
+            }).then(function (response) {
+                location.reload();
+            });
+        }
+
+        $rootScope.addToCart = function (productId) {
+            $http({
+                url: contextPath + '/api/v1/cart/add/',
+                method: 'GET',
+                params: {
+                    prodId: productId,
+                    cartName: $localStorage.aprilCartId
+                }
+            }).then(function (response) {
+                $rootScope.updateCountProductToTop(response.data);
+            });
+        }
+
+        $rootScope.updateCountProductToTop = function (countProductInCart) {
+            $("#count_products").html(countProductInCart);
+        }
+
+        $rootScope.loadCart();
     }
 })();
 
 angular.module('app').controller('indexController',
     function ($scope, $http, $localStorage, $location, $cookies) {
-    const contextPath = 'http://localhost:8189/market';
+        const contextPath = 'http://localhost:8189/market';
         $scope.tryToAuth = function () {
             $http.post(contextPath + '/auth', $scope.user)
                 .then(function successCallback(response) {
                     if (response.data.token) {
                         $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
-                        $localStorage.aprilMarketCurrentUser = {username: $scope.user.username, token: response.data.token};
+                        $localStorage.aprilMarketCurrentUser = {
+                            username: $scope.user.username,
+                            token: response.data.token
+                        };
 
                         $scope.mergeCarts();
 
@@ -143,21 +172,8 @@ angular.module('app').controller('indexController',
                         $scope.user.password = null;
                     }
                 }, function errorCallback(response) {
-                    delete $localStorage.aprilMarketCurrentUser;
-                    $scope.isUserLoggedIn = false;
-                    $http.defaults.headers.common.Authorization = '';
+                    $scope.clearUser();
                 });
         };
-
-        $scope.tryToLogout = function () {
-            $scope.clearUser();
-            $location.path('/');
-        };
-
-        $scope.clearUser = function () {
-            delete $localStorage.aprilMarketCurrentUser;
-            $scope.isUserLoggedIn = false;
-            $http.defaults.headers.common.Authorization = '';
-            location.reload();
-        };
-});
+    }
+);

@@ -1,18 +1,6 @@
 angular.module('app').controller('cartController', function ($scope, $http, $localStorage) {
     const contextPath = 'http://localhost:8189/market';
 
-    $scope.loadCart = function (page) {
-        $http({
-            url: contextPath + '/api/v1/cart',
-            method: 'GET',
-            params: {
-                cartName: $localStorage.aprilCartId
-            }
-        }).then(function (response) {
-            $scope.cartDto = response.data;
-        });
-    };
-
     $scope.clearCart = function () {
         $http({
             url: contextPath + '/api/v1/cart/clear',
@@ -56,21 +44,14 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                 cartName: $localStorage.aprilCartId
             }
         }).then(function (response) {
+            $scope.updateCountProductToTop(response.data);
             $scope.loadCart();
         });
     }
 
-    $scope.addToCart = function (productId) {
-        $http({
-            url: contextPath + '/api/v1/cart/add/',
-            method: 'GET',
-            params: {
-                prodId: productId,
-                cartName: $localStorage.aprilCartId
-            }
-        }).then(function (response) {
-            $scope.loadCart();
-        });
+    $scope.addToCartProduct = function (productId) {
+        $scope.addToCart(productId);
+        $scope.loadCart();
     }
 
     $scope.loadCart();

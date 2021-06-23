@@ -35,19 +35,19 @@ public class CartController {
     }
 
     @GetMapping("/add")
-    public void addToCart(Principal principal, @RequestParam(name = "prodId") Long id, @RequestParam String cartName) {
+    public Integer addToCart(Principal principal, @RequestParam(name = "prodId") Long id, @RequestParam String cartName) {
         if (principal != null) {
             cartName = principal.getName();
         }
-        cartService.addToCart(cartName, id);
+        return cartService.addToCart(cartName, id);
     }
 
     @GetMapping("/dec")
-    public void decrementProduct(Principal principal, @RequestParam(name = "prodId") Long id, @RequestParam String cartName) {
+    public Integer decrementProduct(Principal principal, @RequestParam(name = "prodId") Long id, @RequestParam String cartName) {
         if (principal != null) {
             cartName = principal.getName();
         }
-        cartService.decrementProduct(cartName, id);
+        return cartService.decrementProduct(cartName, id);
     }
 
     @GetMapping("/clear")
