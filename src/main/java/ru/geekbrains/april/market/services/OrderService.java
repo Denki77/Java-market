@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.april.market.dtos.OrderDto;
 import ru.geekbrains.april.market.dtos.OrderItemDto;
 import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
@@ -28,9 +29,11 @@ public class OrderService {
         return orderRepository.findAllByUser(user);
     }
 
-    public Order createOrderForCurrentUser(User user) {
+    public Order createOrderForCurrentUser(User user, OrderDto orderDto) {
         Order order = new Order();
         order.setUser(user);
+        order.setPhone(orderDto.getPhone());
+        order.setAddress(orderDto.getAddress());
         Cart cart = cartService.getCurrentCart(user.getUsername());
         order.setPrice(cart.getSum());
         // todo распутать этот кусок
@@ -44,9 +47,11 @@ public class OrderService {
             orderItem.setPrice(o.getPrice());
             orderItem.setProduct(productService.findById(o.getProductId()).get());
         }
-        order = orderRepository.save(order);
+        System.out.println("before save");
+        Order orderAfterSave = orderRepository.save(order);
+        System.out.println("after save");
         cart.clear();
         cartService.save(user.getUsername(), cart);
-        return order;
+        return orderAfterSave;
     }
 }

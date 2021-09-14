@@ -11,9 +11,13 @@ import java.util.stream.Collectors;
 public class UserDto {
     private String username;
     private String email;
+    private String name;
+    private String surname;
 
-    public UserDto(String username, String email) {
+    public UserDto(String username, String email, String name, String surname) {
         this.username = username;
         this.email = email;
+        this.name = name;
+        this.surname = surname;
     }
 }

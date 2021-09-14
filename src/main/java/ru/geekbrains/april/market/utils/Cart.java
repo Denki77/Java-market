@@ -25,6 +25,7 @@ import java.util.List;
 public class Cart {
     private List<OrderItemDto> items;
     private BigDecimal sum;
+    private Integer countProductInCart;
 
     public Cart() {
         items = new ArrayList<>();
@@ -60,6 +61,10 @@ public class Cart {
     public void addToCart(Product product) {
         items.add(new OrderItemDto(product));
         recalculate();
+    }
+
+    public int getCountProductInCart() {
+        return items.size();
     }
 
     public void clear() {

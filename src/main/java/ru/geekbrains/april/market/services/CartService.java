@@ -13,21 +13,23 @@ public class CartService {
     private final ProductService productService;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void addToCart(String cartId, Long productId) {
+    public int addToCart(String cartId, Long productId) {
         Cart cart = getCurrentCart(cartId);
         if (cart.addToCart(productId)) {
             save(cartId, cart);
-            return;
+            return cart.getCountProductInCart();
         }
         Product product = productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " is missed. (Add to cart)"));
         cart.addToCart(product);
         save(cartId, cart);
+        return cart.getCountProductInCart();
     }
 
-    public void decrementProduct(String cartId, Long productId) {
+    public int decrementProduct(String cartId, Long productId) {
         Cart cart = getCurrentCart(cartId);
         cart.decrementProduct(productId);
         save(cartId, cart);
+        return cart.getCountProductInCart();
     }
 
     public boolean isCartExists(String cartId) {
@@ -58,5 +60,9 @@ public class CartService {
         userCart.merge(guestCart);
         save(userCartId, userCart);
         save(guestCartId, guestCart);
+    }
+
+    public void dropCart(String cartId) {
+        redisTemplate.delete(cartId);
     }
 }

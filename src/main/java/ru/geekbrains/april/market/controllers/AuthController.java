@@ -7,10 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.april.market.dtos.JwtRequest;
 import ru.geekbrains.april.market.dtos.JwtResponse;
 import ru.geekbrains.april.market.error_handling.MarketError;
@@ -18,13 +15,14 @@ import ru.geekbrains.april.market.services.UserService;
 import ru.geekbrains.april.market.utils.JwtTokenUtil;
 
 @RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/auth")
+    @PostMapping
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -34,5 +32,15 @@ public class AuthController {
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @PostMapping("/check_auth")
+    public ResponseEntity<?> checkAuthToken(@RequestBody JwtRequest authRequest) {
+
+        if (jwtTokenUtil.getUsernameFromToken(authRequest.getToken()).equals(authRequest.getUsername())) {
+            return ResponseEntity.ok(new JwtResponse(authRequest.getToken()));
+        }
+
+        return new ResponseEntity<>(new MarketError(HttpStatus.UNAUTHORIZED.value(), "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
     }
 }
